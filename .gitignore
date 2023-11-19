@@ -1,0 +1,5 @@
+out/.idea
+*.out/
+out/exercises.pdf
+*.log
+.idea

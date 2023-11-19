@@ -1,0 +1,41 @@
+% PROBLEM 2
+\begin{problem}
+    Show that if $p \geq 5 \sqrt{\frac{\log{n}}{n}}$ then a.a.s. every edge of $\mathbb{G}_{n,p}$ is contained in at least $\frac{n p^2}{2}$ triangles.
+    \begin{sol}
+        \begin{proof}
+            First of all, let's bound the probability of an edge $e$ of $\mathbb{G}_{n,p}$ being contained in less than $\frac{n p^2}{2}$ triangles.
+            Take $u$ and $v \in V(\mathbb{G}_{n,p})$ the vertices connected by the edge $e$.
+            For all $w_i \in V(\mathbb{G}_{n,p}) \setminus \{u, v\}$ consider the random variable
+            \[ Y_i = \mathbbm{1}(\{w_i u, w_i v\} \subseteq E(\mathbb{G}_{n,p})) \sim Ber(p^2) \]
+            Since the edges $w_i u, w_i v, w_j u, w_j v$ are independent for all $i \neq j$, $(Y_i)_i$ is a collection of independent random variables.
+            Thus,
+            \[ Y = \sum_{i=1}^{n-2} Y_i \sim Bin(n-2, p^2) \]
+
+            \begin{claim}
+                $\frac{n p^2}{2} = \frac{n}{2(n-2)} (n-2) p^2 = (1 - (1 - \frac{n}{2(n-2)})) (n-2) p^2$
+            \end{claim}
+
+            \paragraph
+            \noindent Now, notice that $e$ being contained in a triangle in $\mathbb{G}_{n,p}$ is equivalent to the existence of a vertex $v_i$ connected to both $u$ and $v$ by an edge (i.e. $Y_i = 1$).
+            Thus, we can calculate the probability of the number of triangles containing $e$ being smaller than $\frac{n p^2}{2}$ as:
+            \[ \mathbb{P}(Y < \frac{n p^2}{2}) \leq \mathbb{P}(Y \leq \frac{n p^2}{2}) = \mathbb{P}(Y \leq (1 - (1 - \frac{n}{2(n-2)})) (n-2) p^2) = \mathbb{P}(Y \leq (1 - \delta) \mu) \]
+            where $\mu \coloneqq \mathbb{E}(Y) = (n-2) p^2$ and $\delta \coloneqq 1 - \frac{n}{2 (n-2)} < 1$
+            Then, we can use Chernoff's Inequality (Theorem 2.1 of session 5):
+            \[ \mathbb{P}(Y \leq (1 - \delta) \mu) \leq e^{-\delta^2 \mu / 2} \]
+            Finally, we can calculate (bound) the probability of the existence of an edge not satisfying the condition:
+            \[ \mathbb{P}(\exists e, Y < \frac{np^2}{2}) \leq \binom{n}{2} e^{-\delta^2 \mu / 2} \leq \binom{n}{2} e^{- (1 - \frac{n}{2(n-2)})^2 (n-2) p^2 / 2} \]
+            Now, since $p \geq 5 \sqrt{\frac{\log{n}}{n}}$ we can rewrite as:
+            \[ p = 5 f \sqrt{\frac{\log{n}}{n}} \text{ with } f \geq 1 \]
+            Substitute $p$ in the formula:
+            \[ \mathbb{P}(\exists e, Y < \frac{np^2}{2}) \leq \binom{n}{2} e^{- (1 - \frac{n}{2(n-2)})^2 (n-2) (5 f)^2 \frac{\log{n}}{n} / 2} \leq \]
+            \[ \leq \binom{n}{2} (e^{\log{n}})^{- (1 - \frac{n}{2(n-2)})^2 \frac{n-2}{n} (5 f)^2 / 2} \leq \frac{n (n-1)}{2 n^{(1 - \frac{n}{2 (n-2)})^2 \frac{n-2}{n} (5 f)^2 / 2}} \]
+            Since $(1 - \frac{n}{2 (n-2)})^2 \frac{n-2}{n} (5 f)^2 / 2 \rightarrow \frac{25}{8} f^2 > 2$ when $n \rightarrow \infty$,
+            \[ \mathbb{P}(\exists e, Y < \frac{np^2}{2}) \rightarrow 0 \]
+            proving the statement of the problem.
+
+            \begin{remark}
+                Notice that the statement still holds if we lower the bound of $p$ to $p > 4\sqrt{\frac{\log{n}}{n}}$.
+            \end{remark}
+        \end{proof}
+    \end{sol}
+\end{problem}

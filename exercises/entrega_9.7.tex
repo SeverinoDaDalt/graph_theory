@@ -1,0 +1,240 @@
+% PROBLEM 7
+\begin{problem}
+    Let $X$ and $Y$ be disjoint sets of vertices with $e(X,Y) = 0$.
+    Prove that
+    \[
+        \frac{|X| |Y|}{(n - |X|)(n - |Y|)} \leq \left(\frac{\mu_n - \mu_2}{\mu_n + \mu_2}\right)^2
+    \]
+    [Hint: consider the matrix $M =
+    \begin{pmatrix}
+        0 & L + \mu I \\
+        L + \mu I & 0
+    \end{pmatrix}$
+    where $\mu = -\frac{1}{2}(\mu_n + \mu_2)$ and use interlacing with partition $(X, V \setminus X, Y, V \setminus Y)$.]
+    \begin{sol}
+        \begin{proof}
+            % Define matrix M and vertices indices.
+            Consider the matrix $M =
+            \begin{pmatrix}
+                0 & L + \mu I \\
+                L + \mu I & 0
+            \end{pmatrix}$.
+            Also, index the vertices of the graph such that $\{v_1, \dots, v_{|X|}\} = X$, $\{v_{|X| + 1}, \dots, v_{n - |Y|}\} = V \setminus X \setminus Y$ and $\{v_{n - |Y| + 1}, \dots, v_{n}\} = Y$.
+
+            This way,
+            \[
+                \underbrace{v_1, \dots, v_{|X|}}_{X}, \underbrace{v_{|X| + 1}, \dots, v_{n - |Y|}, v_{n - |Y| + 1}, \dots, v_{n}}_{V \setminus X}
+            \]
+            and
+            \[
+                \underbrace{v_1, \dots, v_{|X|}, v_{|X| + 1}, \dots, v_{n - |Y|}}_{V \setminus Y}, \underbrace{v_{n - |Y| + 1}, \dots, v_{n}}_{Y}
+            \]
+            Now, we want to calculate the quotient matrix of $M$ over the partition $(X, V \setminus X, Y, V \setminus Y)$.
+
+            \begin{observation}
+                To help with the intuition of what this partition means, consider the bipartite graph $G^{\times 2} = (V^1, V^2, E)$, where $V^1$ and $V^2$ are copies of the vertices $V$, such that:
+                \begin{itemize}
+                    \item For all $i \in \{1 ,2\}$ and $j,k \in \{1, \dots, n\}$, $v^i_j \nsim v^i_k$
+                    \item For all $j,k \in \{1, \dots, n\}$, $v^1_j \sim v^2_k \Leftrightarrow v_j \sim v_k$
+                \end{itemize}
+                Then the partition $(X, V \setminus X, Y, V \setminus Y)$ can be thought as the partition $(X^1, V^1 \setminus X^1, Y^2, V^2 \setminus Y^2)$ of $G^{\times 2}$,
+                where $X^1$ and $Y^2$ are the analogous of $X$ and $Y$ in $V^1$ and $V^2$.
+            \end{observation}
+
+            Let's rewrite $M$ to fit the partition:
+            \[
+                M =
+                \begin{pNiceMatrix}[first-row,last-col]
+                    X                          & V \setminus X                          & V \setminus Y                            & Y                          &               \\
+                    0                          & 0                                      & M_{X \times V \setminus Y}               & M_{X \times Y}             & X             \\
+                    0                          & 0                                      & M_{V \setminus X \times V \setminus Y}   & M_{V \setminus X \times Y} & V \setminus X \\
+                    M_{V \setminus Y \times X} & M_{V \setminus Y \times V \setminus X} & 0                                        & 0                          & V \setminus Y \\
+                    M_{Y \times X}             & M_{Y \times V \setminus X}             & 0                                        & 0                          & Y             \\
+                \end{pNiceMatrix}
+            \]
+            Notice that $L + \mu I =
+            \begin{pmatrix}
+                M_{X \times V \setminus Y}               & 0 \\
+                M_{V \setminus X \times V \setminus Y}   & M_{V \setminus X \times Y}
+            \end{pmatrix}
+            =
+            \begin{pmatrix}
+                M_{V \setminus Y \times X} & M_{V \setminus Y \times V \setminus X} \\
+                0                          & M_{Y \times V \setminus X}
+            \end{pmatrix}
+            $, since $e(X,Y) = 0$ and $M_{X \times Y}$, $M_{Y \times X}$ do not cross the diagonal of $L + \mu I$. \\
+
+            % Calculate quotient matrix B of M over partition (X, V \ X, Y, V \ Y).
+            Call $B$ the quotient matrix over the partition $(X, V \setminus X, Y, V \setminus Y)$.
+            $B$ is a $4 \times 4$ matrix:
+            \[
+                B =
+            \begin{pmatrix}
+                0                          & 0                                      & b_{X \times V \setminus Y}             & 0 \\
+                0                          & 0                                      & b_{V \setminus X \times V \setminus Y} & b_{V \setminus X \times Y} \\
+                b_{V \setminus Y \times X} & b_{V \setminus Y \times V \setminus X} & 0                                      & 0 \\
+                0                          & b_{Y \times V \setminus X}             & 0                                      & 0 \\
+            \end{pmatrix}
+            \]
+
+            \begin{claim}
+                $B =
+                \begin{pmatrix}
+                    0                     & 0                           & \mu                         & 0                     \\
+                    0                     & 0                           & \mu - \mu \frac{|Y|}{n-|X|} & \mu \frac{|Y|}{n-|X|} \\
+                    \mu \frac{|X|}{n-|Y|} & \mu - \mu \frac{|X|}{n-|Y|} & 0                           & 0                     \\
+                    0                     & \mu                         & 0                           & 0                     \\
+                \end{pmatrix}$
+                \begin{proof}
+                    We only need to prove that:
+                    \begin{itemize}
+                        \item $b_{X \times V \setminus Y} = b_{Y \times V \setminus X} = \mu$.
+                        Since the rows of $L$ sum zero, the rows of $L + \mu I$ sum $\mu$.
+                        Then, the average these sums is $\mu$.
+                        \item $b_{V \setminus X \times Y} = \mu \frac{|Y|}{n-|X|}$.
+                        Again, the columns of $L + \mu I$ sum $\mu$, so the sum of all the elements of $M_{V \setminus X \times Y}$ is $\mu |Y|$.
+                        We average this over the number of rows, resulting in $\mu \frac{|Y|}{n - |X|}$.
+                        (analogously for $b_{V \setminus Y \times X}$).
+                        \item $b_{V \setminus X \times V \setminus Y} = \mu - \mu \frac{|Y|}{n-|X|}$.
+                        This comes directly from the fact that the rows of $M_{V \setminus X \times Y}$ on average sum $\mu \frac{|Y|}{n - |X|}$, and the rows of $L - \mu I$ sum $\mu$.
+                        (analogously for $b_{V \setminus Y \times V \setminus X}$).
+                    \end{itemize}
+                \end{proof}
+
+            \end{claim}
+
+            Before calculating the eigenvalues of $M$ and $B$, let us prove the following claim:
+            \begin{claim}
+                Consider $N$ a square matrix such that $N =
+                \begin{pmatrix}
+                    0 & E \\
+                    F & 0 \\
+                \end{pmatrix}$ where $E$ and $F$ are square matrices.
+                Then, the eigenvalues of $N$ are the square roots of the eigenvalues of $F E$.
+                \begin{proof}
+                    $\lambda$ is an eigenvalue of $N$ if and only if $det
+                    \begin{pmatrix}
+                        D & E \\
+                        F & D \\
+                    \end{pmatrix} = 0
+                    $, where $D = - \lambda I$.
+                    Since $D$ is invertible, we can use Schur complement:
+                    \[
+                        \begin{pmatrix}
+                            D & E \\
+                            F & D \\
+                        \end{pmatrix} =
+                        \begin{pmatrix}
+                            I       & 0 \\
+                            FD^{-1} & I \\
+                        \end{pmatrix}
+                        \begin{pmatrix}
+                            D & 0 \\
+                            0 & D - FD^{-1}E \\
+                        \end{pmatrix}
+                        \begin{pmatrix}
+                            I & D^{-1}E \\
+                            0 & I \\
+                        \end{pmatrix}
+                    \]
+                    Also, \[ det
+                        \begin{pmatrix}
+                            I       & 0 \\
+                            FD^{-1} & I \\
+                        \end{pmatrix} = det
+                        \begin{pmatrix}
+                            I & D^{-1}E \\
+                            0 & I \\
+                        \end{pmatrix} = 1
+                    \]
+                    since they are triangular matrices with $1$s in the diagonal, and \[det
+                        \begin{pmatrix}
+                            D & 0 \\
+                            0 & D - FD^{-1}E \\
+                        \end{pmatrix} = det(D) det(D - FD^{-1}E) = det(D^2 -F E)
+                    \]
+                    Thus, $det(N - \lambda I) = det(D^2 -F E) = det(\lambda^2 I - FE)$ and $det(N - \lambda I) = 0 \Leftrightarrow det(FE - \lambda^2 I) = 0$.
+                    We conclude that $\lambda$ is an eigenvalue of $N$ if and only if $\lambda^2$ is an eigenvalue of $F E$.
+                \end{proof}
+            \end{claim}
+
+            % Calculate eigenvalues of M.
+            Recall, the eigenvalues of $L$ are
+            \[
+                0 = \mu_1 \leq \mu_2 \leq \dots \leq \mu_n
+            \]
+            Then, the eigenvalues of $L + \mu I$ are
+            \[\label{eq:1}\tag{1}
+                \mu \leq \mu_2 + \mu = \frac{\mu_2 - \mu_n}{2} \leq \dots \leq \mu_n + \mu = \frac{\mu_n - \mu_2}{2}
+            \]
+            and the eigenvalues of $(L + \mu I)^2$ are
+            \[
+                \mu^2, \left(\frac{\mu_2 - \mu_n}{2}\right)^2, \dots, \left(\frac{\mu_n - \mu_2}{2}\right)^2
+            \]
+            Thus, using the second claim, we conclude that the eigenvalues of $M$ are the positive and negative square roots of the eigenvalues
+            of $(L + \mu I)^2$.
+            Also, from~\ref{eq:1} we can conclude that $\pm\mu$ and $\pm\frac{\mu_n - \mu_2}{2}$ are the first and second eigenvalues with higher absolute values.
+            So, the eigenvalues of $M$ are
+            \[
+                \lambda_1 = -\mu \geq \lambda_2 = \frac{\mu_n - \mu_2}{2} \geq \dots \geq \lambda_{2n-1} = \frac{\mu_2 - \mu_n}{2} \geq \lambda_{2n} = \mu
+            \]
+
+            % Calculate eigenvalues of B.
+            Similarly, the eigenvalues of $B$ are the square roots of the eigenvalues of $B_2 B_1$,
+            where $B_1 = \mu
+                \begin{pmatrix}
+                    1     & E \\
+                    1 - b & b \\
+                \end{pmatrix}$, $B_2 = \mu
+                \begin{pmatrix}
+                    a & 1 - a \\
+                    0 & 1     \\
+                \end{pmatrix}$, $a = \frac{|X|}{n - |Y|}$ and $b = \frac{|Y|}{n - |X|}$.
+            Let's calculate $B_2 B_1$:
+            \[
+                B_2 B_1 = \mu^2
+                \begin{pmatrix}
+                    a & 1 - a \\
+                    0 & 1     \\
+                \end{pmatrix}
+                \begin{pmatrix}
+                    1     & E \\
+                    1 - b & b \\
+                \end{pmatrix} = \mu^2
+                \begin{pmatrix}
+                    1 - b + ab & b - ab \\
+                    1 - b      & b      \\
+                \end{pmatrix}
+            \]
+            The determinant of $B_2 B_1 / \mu^2 - \delta I$ is
+            \[
+                \begin{gathered}
+                    det(B_2 B_1 / \mu^2 - \delta I) = (1 - b - ab - \delta)(b - \delta) - b(1 - a)(1 - b) = \\
+                    = \delta^2 - \delta (1 - b + ab + b) + b - b^2 + ab^2 - b + ab + b^2 - ab^2 = \\
+                    = \delta^2 (1 + ab)\delta + ab = (\delta - 1)(\delta - ab)
+                \end{gathered}
+            \]
+            Thus, the eigenvalues of $B_2 B_1$ are $\mu^2$ and $\mu^2 \frac{|X| |Y|}{(n - |X|)(n - |Y|)}$.
+            Again, using the second claim, we conclude that the eigenvalues of $B$ are
+            \[
+                \delta_1 = -\mu \geq \delta_2 = -\mu \sqrt{\frac{|X| |Y|}{(n - |X|)(n - |Y|)}} \geq \delta_3 = \mu \sqrt{\frac{|X| |Y|}{(n - |X|)(n - |Y|)}} \geq \delta_4 = \mu
+            \]
+
+            % Interlacing and proof of statement.
+            Finally, we can use interlacing between the eigenvalues of $M$ and $B$:
+            \begin{itemize}
+                \item $\lambda_2 \geq \delta_2 \geq 0$
+                \item $0 > \delta_3 \geq \lambda_{2n-4+3} = \lambda_{2n-1}$
+            \end{itemize}
+            Thus,
+            \[
+                \begin{gathered}
+                    \frac{|X| |Y|}{(n - |X|)(n - |Y|)} = -\frac{\delta_2 \delta_3}{\mu^2} \leq -\frac{\lambda_2 \lambda_{2n -1}}{\mu^2} = \\
+                    = \left(-\frac{2}{\mu_n + \mu_2}\right)^2 \left(-\frac{\mu_n - \mu_2}{2}\right)^2 = \left(\frac{\mu_n - \mu_2}{\mu_n + \mu_2}\right)^2
+                \end{gathered}
+            \]
+            This proves the statement of the problem.
+
+        \end{proof}
+    \end{sol}
+\end{problem}
